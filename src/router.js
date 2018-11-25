@@ -26,6 +26,11 @@ export default new Router({
       path: "/join",
       name: "join",
       component: () => import("./views/Join.vue")
+    },
+    {
+      path: "/favorites",
+      name: "favorites",
+      component: () => import("./views/Favorites.vue")
     }
   ]
 });
