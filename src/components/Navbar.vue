@@ -8,7 +8,7 @@
             </router-link>
             <v-spacer></v-spacer>
             <div v-if="!isAuthenticated">
-                <v-btn flat to="/signin" @click="logout">Sign in</v-btn>
+                <v-btn flat to="/signin">Sign in</v-btn>
                 <v-btn raised to="/join" color="grey">Join</v-btn>
             </div>
             <div v-else>
