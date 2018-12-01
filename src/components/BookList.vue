@@ -16,7 +16,15 @@
                   <v-text-field v-model="editedItem.title" label="Title"></v-text-field>
                 </v-flex>
                 <v-flex xs12 sm6 md4>
-                  <v-text-field v-model="editedItem.author" label="Author"></v-text-field>
+                  <v-select
+                    :items="authors"
+                    v-model="selectedAuthors"
+                    :menu-props="{ maxHeight: '400' }"
+                    label="Select"
+                    multiple
+                    hint="Pick authors"
+                    persistent-hint
+                  ></v-select>
                 </v-flex>
                 <v-flex xs12 sm6 md4>
                   <v-text-field v-model="editedItem.genre" label="Genre"></v-text-field>
@@ -35,11 +43,12 @@
     </v-toolbar>
     <v-data-table :headers="headers" :items="books" class="elevation-1">
       <template slot="items" slot-scope="props" v-onclick="alert('click')">
-        <tr @click="bookDetails(props.item.id)">
+        <tr>
           <td>{{ props.item.title }}</td>
           <td class="text-xs-left">{{ props.item.author }}</td>
           <td class="text-xs-left">{{ props.item.genre }}</td>
           <td class="justify-center layout px-0">
+            <v-icon small class="mr-2" @click="bookDetails(props.item.id)">far fa-eye</v-icon>
             <v-icon
               v-if="props.item.favorited"
               small
@@ -80,6 +89,8 @@ export default {
       { text: "Actions", value: "name", sortable: false }
     ],
     books: [],
+    authors: [],
+    selectedAuthors: [],
     editedIndex: -1,
     editedItem: {
       title: "",
@@ -123,7 +134,7 @@ export default {
           favorited: false
         }
       ];
-      this.loading = false;
+      this.authors = ["Jo Nesbo", "Brandon Sanderson"];
     },
     editItem(item) {
       this.editedIndex = this.books.indexOf(item);

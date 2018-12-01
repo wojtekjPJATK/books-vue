@@ -13,6 +13,21 @@
             <v-container grid-list-md>
               <v-layout wrap>
                 <v-flex xs12 sm6 md4>
+                  <v-badge overlap right color="white">
+                    <v-icon slot="badge" light @click="editAvatar()">fas fa-pen</v-icon>
+                    <v-avatar size="60px">
+                      <img v-if="editedItem.avatar" :src="editedItem.avatar">
+                    </v-avatar>
+                  </v-badge>
+                  <input
+                    type="file"
+                    style="display:none"
+                    ref="fileInput"
+                    accept="image/*"
+                    @change="onFilePicked"
+                  >
+                </v-flex>
+                <v-flex xs12 sm6 md4>
                   <v-text-field v-model="editedItem.last" label="Last Name"></v-text-field>
                 </v-flex>
                 <v-flex xs12 sm6 md4>
@@ -32,10 +47,11 @@
     </v-toolbar>
     <v-data-table :headers="headers" :items="authors" class="elevation-1">
       <template slot="items" slot-scope="props">
-        <tr @click="authorDetails(props.item.id)">
+        <tr>
           <td class="text-xs-left">{{ props.item.last }}</td>
           <td class="text-xs-left">{{ props.item.first }}</td>
           <td class="justify-center layout px-0">
+            <v-icon small class="mr-2" @click="authorDetails(props.item.id)">far fa-eye</v-icon>
             <v-icon small class="mr-2" @click="editItem(props.item)">fas fa-edit</v-icon>
             <v-icon small @click="deleteItem(props.item)">fas fa-trash</v-icon>
           </td>
@@ -53,6 +69,7 @@ export default {
   data: () => ({
     dialog: false,
     loading: true,
+    image: null,
     headers: [
       {
         text: "Last Name",
@@ -66,18 +83,22 @@ export default {
       },
       {
         text: "Actions",
-        align: "center"
+        value: "actions",
+        align: "center",
+        sortable: false
       }
     ],
     authors: [],
     editedIndex: -1,
     editedItem: {
       last: "",
-      first: ""
+      first: "",
+      avatar: ""
     },
     defaultItem: {
       last: "",
-      first: ""
+      first: "",
+      avatar: ""
     }
   }),
   computed: {
@@ -99,7 +120,8 @@ export default {
         {
           id: 1,
           first: "Jo",
-          last: "Nesbo"
+          last: "Nesbo",
+          avatar: "https://cdn.vuetifyjs.com/images/john.jpg"
         },
         {
           id: 2,
@@ -111,6 +133,7 @@ export default {
     },
     editItem(item) {
       this.editedIndex = this.authors.indexOf(item);
+      if (!item.avatar) item.avatar = "/avatar.png";
       this.editedItem = Object.assign({}, item);
       this.dialog = true;
     },
@@ -136,6 +159,18 @@ export default {
     },
     authorDetails(authorID) {
       this.$router.push({ path: "/author/" + authorID });
+    },
+    editAvatar() {
+      this.$refs.fileInput.click();
+    },
+    onFilePicked(event) {
+      const files = event.target.files;
+      const fileReader = new FileReader();
+      fileReader.addEventListener("load", () => {
+        this.editedItem.avatar = fileReader.result;
+      });
+      fileReader.readAsDataURL(files[0]);
+      this.image = files[0];
     }
   }
 };
