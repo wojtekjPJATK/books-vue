@@ -1,8 +1,8 @@
 <template>
   <v-layout align-center column class="my-4">
     <v-avatar size="100px">
-      <img v-if="this.author.avatar" :scr="this.author.avatar">
-      <v-icon large v-else>fas fa-user</v-icon>
+      <img v-if="this.author.avatar" :src="this.author.avatar">
+      <img v-else src="/avatar.png">
     </v-avatar>
     <h1>{{ this.author.first }} {{ this.author.last }}</h1>
     <v-subheader>Books written:</v-subheader>

@@ -15,8 +15,9 @@
                 <v-flex xs12 sm6 md4>
                   <v-badge overlap right color="white">
                     <v-icon slot="badge" light @click="editAvatar()">fas fa-pen</v-icon>
-                    <v-avatar size="60px">
+                    <v-avatar size="70px">
                       <img v-if="editedItem.avatar" :src="editedItem.avatar">
+                      <img v-else src="/avatar.png">
                     </v-avatar>
                   </v-badge>
                   <input
@@ -92,13 +93,11 @@ export default {
     editedIndex: -1,
     editedItem: {
       last: "",
-      first: "",
-      avatar: ""
+      first: ""
     },
     defaultItem: {
       last: "",
-      first: "",
-      avatar: ""
+      first: ""
     }
   }),
   computed: {
@@ -133,7 +132,6 @@ export default {
     },
     editItem(item) {
       this.editedIndex = this.authors.indexOf(item);
-      if (!item.avatar) item.avatar = "/avatar.png";
       this.editedItem = Object.assign({}, item);
       this.dialog = true;
     },

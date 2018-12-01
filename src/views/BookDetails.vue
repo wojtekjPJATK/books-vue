@@ -1,5 +1,8 @@
 <template>
-  <h1>{{ book_id }}</h1>
+  <v-layout>
+    <h1>{{ book_id }}</h1>
+    <img src="/avatar.png">
+  </v-layout>
 </template>
 
 <script>
