@@ -31,6 +31,23 @@ export default new Router({
       path: "/favorites",
       name: "favorites",
       component: () => import("./views/Favorites.vue")
+    },
+    {
+      path: "/authors",
+      name: "authors",
+      component: () => import("./views/Authors.vue")
+    },
+    {
+      path: "/author/:author_id",
+      name: "author",
+      props: true,
+      component: () => import("./views/AuthorDetails.vue")
+    },
+    {
+      path: "/book/:book_id",
+      name: "book",
+      props: true,
+      component: () => import("./views/BookDetails.vue")
     }
   ]
 });

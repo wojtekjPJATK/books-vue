@@ -1,14 +1,5 @@
 <template>
   <div>
-    <v-toolbar raised>
-      <v-toolbar-title>Favorites</v-toolbar-title>
-      <v-divider
-        class="mx-4"
-        inset
-        vertical
-      ></v-divider>
-      <v-spacer></v-spacer>
-    </v-toolbar>
     <v-data-table
       :headers="headers"
       :items="favorites"
@@ -16,8 +7,8 @@
     >
       <template slot="items" slot-scope="props">
         <td>{{ props.item.title }}</td>
-        <td class="text-xs-right">{{ props.item.author }}</td>
-        <td class="text-xs-right">{{ props.item.genre }}</td>
+        <td class="text-xs-left">{{ props.item.author }}</td>
+        <td class="text-xs-left">{{ props.item.genre }}</td>
         <td class="justify-center layout px-0">
             <v-icon v-if="props.item.favorited"
             small

@@ -1,6 +1,6 @@
 <template>
-    <v-layout align-center column class="mx-4">
-        <h1>My Favorites</h1>
+    <v-layout align-center column class="my-4">
+        <h1 class="mb-3">My Favorites</h1>
         <FavoriteList />
     </v-layout>
 </template>

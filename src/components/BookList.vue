@@ -1,12 +1,6 @@
 <template>
   <div>
     <v-toolbar raised>
-      <v-toolbar-title>Books</v-toolbar-title>
-      <v-divider
-        class="mx-4"
-        inset
-        vertical
-      ></v-divider>
       <v-spacer></v-spacer>
       <v-dialog v-model="dialog" max-width="600px">
         <v-btn slot="activator" color="grey" class="mb-2">New Book</v-btn>
@@ -39,44 +33,29 @@
         </v-card>
       </v-dialog>
     </v-toolbar>
-    <v-data-table
-      :headers="headers"
-      :items="books"
-      class="elevation-1"
-    >
-      <template slot="items" slot-scope="props">
-        <td>{{ props.item.title }}</td>
-        <td class="text-xs-right">{{ props.item.author }}</td>
-        <td class="text-xs-right">{{ props.item.genre }}</td>
-        <td class="justify-center layout px-0">
-            <v-icon v-if="props.item.favorited"
-            small
-            class="mr-2"
-            @click="changeFavorite(props.item)"
-          >
-            fas fa-star
-          </v-icon>
-          <v-icon v-if="!props.item.favorited"
-            small
-            class="mr-2"
-            @click="changeFavorite(props.item)"
-          >
-            far fa-star
-          </v-icon>
-          <v-icon
-            small
-            class="mr-2"
-            @click="editItem(props.item)"
-          >
-            fas fa-edit
-          </v-icon>
-          <v-icon
-            small
-            @click="deleteItem(props.item)"
-          >
-            fas fa-trash
-          </v-icon>
-        </td>
+    <v-data-table :headers="headers" :items="books" class="elevation-1">
+      <template slot="items" slot-scope="props" v-onclick="alert('click')">
+        <tr @click="bookDetails(props.item.id)">
+          <td>{{ props.item.title }}</td>
+          <td class="text-xs-left">{{ props.item.author }}</td>
+          <td class="text-xs-left">{{ props.item.genre }}</td>
+          <td class="justify-center layout px-0">
+            <v-icon
+              v-if="props.item.favorited"
+              small
+              class="mr-2"
+              @click="changeFavorite(props.item)"
+            >fas fa-star</v-icon>
+            <v-icon
+              v-if="!props.item.favorited"
+              small
+              class="mr-2"
+              @click="changeFavorite(props.item)"
+            >far fa-star</v-icon>
+            <v-icon small class="mr-2" @click="editItem(props.item)">fas fa-edit</v-icon>
+            <v-icon small @click="deleteItem(props.item)">fas fa-trash</v-icon>
+          </td>
+        </tr>
       </template>
       <template slot="no-data">
         <v-btn color="primary" @click="initialize">Reset</v-btn>
@@ -130,12 +109,14 @@ export default {
     initialize() {
       this.books = [
         {
+          id: 1,
           title: "First Snow",
           author: "Jo Nesbo",
           genre: "Criminal",
           favorited: true
         },
         {
+          id: 2,
           title: "Snowman",
           author: "Jo Nesbo",
           genre: "Criminal",
@@ -171,6 +152,9 @@ export default {
     },
     changeFavorite(item) {
       item.favorited = !item.favorited;
+    },
+    bookDetails(bookID) {
+      this.$router.push({ path: "/book/" + bookID });
     }
   }
 };

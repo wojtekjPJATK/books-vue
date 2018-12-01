@@ -1,6 +1,6 @@
 <template>
-    <v-layout align-center column class="mx-4">
-        <h1>Book List</h1>
+    <v-layout align-center column class="my-4">
+        <h1 class="mb-3">Book List</h1>
         <BookList />
     </v-layout>
 </template>
