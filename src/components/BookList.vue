@@ -2,7 +2,7 @@
   <div>
     <v-toolbar raised>
       <v-spacer></v-spacer>
-      <v-dialog v-model="dialog" max-width="600px">
+      <v-dialog v-model="dialog" max-width="800px">
         <v-btn slot="activator" color="grey" class="mb-2">New Book</v-btn>
         <v-card>
           <v-card-title>
@@ -12,6 +12,21 @@
           <v-card-text>
             <v-container grid-list-md>
               <v-layout wrap>
+                <v-flex xs12 sm6 md4>
+                  <v-badge overlap right color="white">
+                    <v-icon slot="badge" light @click="editCover()">fas fa-pen</v-icon>
+                    <v-avatar size="70px" tile>
+                      <img :src="editedItem.cover">
+                    </v-avatar>
+                  </v-badge>
+                  <input
+                    type="file"
+                    style="display:none"
+                    ref="fileInput"
+                    accept="image/*"
+                    @change="onFilePicked"
+                  >
+                </v-flex>
                 <v-flex xs12 sm6 md4>
                   <v-text-field v-model="editedItem.title" label="Title"></v-text-field>
                 </v-flex>
@@ -77,6 +92,7 @@
 export default {
   data: () => ({
     dialog: false,
+    image: null,
     loading: true,
     headers: [
       {
@@ -124,7 +140,9 @@ export default {
           title: "First Snow",
           author: "Jo Nesbo",
           genre: "Criminal",
-          favorited: true
+          favorited: true,
+          cover:
+            "https://ecsmedia.pl/c/harry-hole-tom-7-pierwszy-snieg-w-iext43178539.jpg"
         },
         {
           id: 2,
@@ -134,6 +152,9 @@ export default {
           favorited: false
         }
       ];
+      this.books.forEach(book => {
+        if (!book.cover) book.cover = "avatar.png";
+      });
       this.authors = ["Jo Nesbo", "Brandon Sanderson"];
     },
     editItem(item) {
@@ -166,6 +187,18 @@ export default {
     },
     bookDetails(bookID) {
       this.$router.push({ path: "/book/" + bookID });
+    },
+    editCover() {
+      this.$refs.fileInput.click();
+    },
+    onFilePicked(event) {
+      const files = event.target.files;
+      const fileReader = new FileReader();
+      fileReader.addEventListener("load", () => {
+        this.editedItem.cover = fileReader.result;
+      });
+      fileReader.readAsDataURL(files[0]);
+      this.image = files[0];
     }
   }
 };

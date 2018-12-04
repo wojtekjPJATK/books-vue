@@ -16,8 +16,7 @@
                   <v-badge overlap right color="white">
                     <v-icon slot="badge" light @click="editAvatar()">fas fa-pen</v-icon>
                     <v-avatar size="70px">
-                      <img v-if="editedItem.avatar" :src="editedItem.avatar">
-                      <img v-else src="/avatar.png">
+                      <img :src="editedItem.avatar">
                     </v-avatar>
                   </v-badge>
                   <input
@@ -129,6 +128,9 @@ export default {
         }
       ];
       this.loading = false;
+      this.authors.forEach(author => {
+        if (!author.avatar) author.avatar = "avatar.png";
+      });
     },
     editItem(item) {
       this.editedIndex = this.authors.indexOf(item);

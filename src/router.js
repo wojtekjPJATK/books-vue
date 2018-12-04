@@ -48,6 +48,11 @@ export default new Router({
       name: "book",
       props: true,
       component: () => import("./views/BookDetails.vue")
+    },
+    {
+      path: "/magic",
+      name: "magic",
+      component: () => import("./views/Magic.vue")
     }
   ]
 });
