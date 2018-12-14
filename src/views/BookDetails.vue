@@ -16,7 +16,7 @@ export default {
     }
   },
   created() {
-    //get Book details
+    this.$store.getters("getBookByID", id);
     this.book = {
       title: "First Snow",
       authors: [

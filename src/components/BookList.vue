@@ -104,7 +104,7 @@ export default {
       { text: "Genre", value: "genre" },
       { text: "Actions", value: "name", sortable: false }
     ],
-    books: [],
+    //books: [],
     authors: [],
     selectedAuthors: [],
     editedIndex: -1,
@@ -122,6 +122,12 @@ export default {
   computed: {
     formTitle() {
       return this.editedIndex === -1 ? "New Book" : "Edit Book";
+    },
+    books() {
+      return this.$store.getters("getBooks");
+    },
+    authors() {
+      return this.$store.getters("getAuthors");
     }
   },
   watch: {
@@ -131,32 +137,34 @@ export default {
   },
   created() {
     this.initialize();
+    this.$store.dispatch("getBooks");
+    this.$store.dispatch("getAuthors");
   },
   methods: {
-    initialize() {
-      this.books = [
-        {
-          id: 1,
-          title: "First Snow",
-          author: "Jo Nesbo",
-          genre: "Criminal",
-          favorited: true,
-          cover:
-            "https://ecsmedia.pl/c/harry-hole-tom-7-pierwszy-snieg-w-iext43178539.jpg"
-        },
-        {
-          id: 2,
-          title: "Snowman",
-          author: "Jo Nesbo",
-          genre: "Criminal",
-          favorited: false
-        }
-      ];
-      this.books.forEach(book => {
-        if (!book.cover) book.cover = "avatar.png";
-      });
-      this.authors = ["Jo Nesbo", "Brandon Sanderson"];
-    },
+    // initialize() {
+    //   this.books = [
+    //     {
+    //       id: 1,
+    //       title: "First Snow",
+    //       author: "Jo Nesbo",
+    //       genre: "Criminal",
+    //       favorited: true,
+    //       cover:
+    //         "https://ecsmedia.pl/c/harry-hole-tom-7-pierwszy-snieg-w-iext43178539.jpg"
+    //     },
+    //     {
+    //       id: 2,
+    //       title: "Snowman",
+    //       author: "Jo Nesbo",
+    //       genre: "Criminal",
+    //       favorited: false
+    //     }
+    //   ];
+    //   this.books.forEach(book => {
+    //     if (!book.cover) book.cover = "avatar.png";
+    //   });
+    //   this.authors = ["Jo Nesbo", "Brandon Sanderson"];
+    // },
     editItem(item) {
       this.editedIndex = this.books.indexOf(item);
       this.editedItem = Object.assign({}, item);
