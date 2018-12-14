@@ -7,7 +7,7 @@ axios.defaults.baseURL = "https://2-dot-solwit-pjatk-arc-2018-gr4.appspot.com";
 
 export default new Vuex.Store({
   state: {
-    id: false,
+    id: localStorage.getItem("id") || null,
     books: [],
     authors: []
   },
@@ -29,6 +29,9 @@ export default new Vuex.Store({
     },
     getAuthors(state, authors) {
       state.authors = authors;
+    },
+    setSessionID(state, id) {
+      state.id = id;
     }
   },
   actions: {
@@ -49,30 +52,42 @@ export default new Vuex.Store({
           password: data.password
         })
         .then(result => {
-          console.log(result);
+          let session_id = result.data.id;
+          localStorage.setItem("id", session_id);
+          context.commit("setSessionID", session_id);
         });
     },
     getBooks(context) {
       axios.defaults.headers.common["Authorization"] = context.state.id;
 
-      axios.get("/book").then(response => {
-        console.log(response);
-        let books = response.data.books;
-        let favorites = response.data.favBooks;
-        books.forEach(book => {
-          if (book.id in favorites) book.favorited = true;
-          else book.favorited = false;
+      axios
+        .get("/book")
+        .then(response => {
+          console.log(response);
+          let books = response.data.books;
+          let favorites = response.data.favBooks;
+          // books.forEach(book => {
+          //   if (book.id in favorites) book.favorited = true;
+          //   else book.favorited = false;
+          // });
+          context.commit("getBooks", books);
+        })
+        .catch(err => {
+          console.log(err);
         });
-        context.commit("getBooks", books);
-      });
     },
     getAuthors(context) {
       axios.defaults.headers.common["Authorization"] = context.state.id;
 
-      axios.get("/author").then(response => {
-        console.log(response);
-        context.commit("getAuthors", response.data.authors);
-      });
+      axios
+        .get("/author")
+        .then(response => {
+          console.log(response);
+          context.commit("getAuthors", response.data.authors);
+        })
+        .catch(err => {
+          console.log(err);
+        });
     }
   }
 });

@@ -3,7 +3,7 @@
     <v-container grid-list-md text-xs-center>
       <v-layout row wrap align-content-center>
         <v-flex offset-sm4 sm4>
-          <v-text-field v-model="email" :rules="emailRules" label="E-Mail" required></v-text-field>
+          <v-text-field v-model="username" :rules="usernameRules" label="Username" required></v-text-field>
         </v-flex>
         <v-flex offset-sm4 sm4>
           <v-text-field
@@ -34,11 +34,11 @@ export default {
   data: () => ({
     valid: true,
     show: false,
-    email: "",
+    username: "",
     password: "",
-    emailRules: [
-      v => !!v || "E-mail is required",
-      v => /.+@.+/.test(v) || "E-mail must be valid"
+    usernameRules: [
+      v => !!v || "Username is required",
+      v => v.length >= 3 || "Minimum 3 characters"
     ],
     passwordRules: [
       v => !!v || "Password is required",
