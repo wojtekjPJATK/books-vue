@@ -32,6 +32,9 @@ export default new Vuex.Store({
     }
   },
   mutations: {
+    deleteSession(state) {
+      state.id = null;
+    },
     getBooks(state, books) {
       state.books = books;
     },
@@ -59,9 +62,38 @@ export default new Vuex.Store({
     editBook(state, item) {
       const index = state.books.findIndex(book => book.id == item.id);
       state.books.splice(index, 1, item);
+    },
+    addAuthor(state, item) {
+      state.authors.push(item);
+    },
+    editAuthor(state, item) {
+      const index = state.authors.findIndex(author => author.id == item.id);
+      state.authors.splice(index, 1, item);
+    },
+    deleteAuthor(state, item) {
+      const index = state.authors.findIndex(author => author.id == item.id);
+      state.authors.splice(index, 1);
     }
   },
   actions: {
+    logout(context) {
+      console.log("logging out");
+      axios.defaults.headers.common["Authorization"] = context.state.id;
+      return new Promise((resolve, reject) => {
+        axios
+          .delete("/session/" + this.state.id)
+          .then(response => {
+            console.log(response);
+            localStorage.removeItem("id");
+            context.commit("deleteSession");
+            resolve(response);
+          })
+          .catch(err => {
+            console.log(err);
+            reject(err);
+          });
+      });
+    },
     join(context, data) {
       axios
         .post("/join", {
@@ -73,16 +105,22 @@ export default new Vuex.Store({
         });
     },
     signin(context, data) {
-      axios
-        .post("/signin", {
-          login: data.username,
-          password: data.password
-        })
-        .then(result => {
-          let session_id = result.data.id;
-          localStorage.setItem("id", session_id);
-          context.commit("setSessionID", session_id);
-        });
+      return new Promise((resolve, reject) => {
+        axios
+          .post("/signin", {
+            login: data.username,
+            password: data.password
+          })
+          .then(response => {
+            let session_id = response.data.id;
+            localStorage.setItem("id", session_id);
+            context.commit("setSessionID", session_id);
+            resolve(response);
+          })
+          .catch(err => {
+            reject(err);
+          });
+      });
     },
     getBooks(context) {
       axios.defaults.headers.common["Authorization"] = context.state.id;
@@ -155,7 +193,6 @@ export default new Vuex.Store({
         });
     },
     editBook(context, book) {
-      console.log(book);
       axios.defaults.headers.common["Authorization"] = context.state.id;
       let image = book.image;
       delete book.image;
@@ -166,7 +203,6 @@ export default new Vuex.Store({
         .then(response => {
           context.commit("editBook", response.data.book);
           if (image) {
-            console.log(image);
             let formData = new FormData();
             formData.append("image", image);
             return axios.post("/cover/" + response.data.book.id, formData, {
@@ -207,8 +243,31 @@ export default new Vuex.Store({
       axios
         .post("/author", author)
         .then(response => {
-          console.log(response);
-          context.commit("addAuthor", response.data.book);
+          context.commit("addAuthor", response.data.author);
+        })
+        .catch(err => {
+          console.log(err);
+        });
+    },
+    editAuthor(context, author) {
+      axios.defaults.headers.common["Authorization"] = context.state.id;
+
+      axios
+        .patch("/author/" + author.id, author)
+        .then(response => {
+          context.commit("editAuthor", response.data.author);
+        })
+        .catch(err => {
+          console.log(err);
+        });
+    },
+    deleteAuthor(context, author) {
+      axios.defaults.headers.common["Authorization"] = context.state.id;
+
+      axios
+        .delete("/author/" + author.id, author)
+        .then(response => {
+          context.commit("deleteAuthor", author);
         })
         .catch(err => {
           console.log(err);

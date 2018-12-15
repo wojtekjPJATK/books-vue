@@ -109,9 +109,10 @@ export default {
       this.dialog = true;
     },
     deleteItem(item) {
-      const index = this.authors.indexOf(item);
+      console.log(item);
+      console.log(this.editedItem);
       confirm("Are you sure you want to delete this item?") &&
-        this.$store.dispatch("deleteAuthor", this.editedItem);
+        this.$store.dispatch("deleteAuthor", item);
     },
     close() {
       this.dialog = false;
@@ -122,12 +123,9 @@ export default {
     },
     save() {
       if (this.editedIndex > -1) {
-        Object.assign(this.authors[this.editedIndex], this.editedItem);
         this.$store.dispatch("editAuthor", this.editedItem);
       } else {
         this.$store.dispatch("addAuthor", this.editedItem);
-
-        this.authors.push(this.editedItem);
       }
       this.close();
     }

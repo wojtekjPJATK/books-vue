@@ -150,7 +150,6 @@ export default {
       this.dialog = true;
     },
     deleteItem(item) {
-      const index = this.books.indexOf(item);
       confirm("Are you sure you want to delete this item?") &&
         this.$store.dispatch("deleteBook", item);
     },

@@ -33,9 +33,11 @@ export default {
   }),
   computed: {
     favorites() {
-      this.$store.dispatch("getBooks");
       return this.$store.getters.getFavorites;
     }
+  },
+  created() {
+    this.$store.dispatch("getBooks");
   },
   methods: {
     removeFavorite(item) {
