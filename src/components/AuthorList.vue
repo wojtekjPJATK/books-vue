@@ -36,7 +36,6 @@
           <td class="text-xs-left">{{ props.item.lastName }}</td>
           <td class="text-xs-left">{{ props.item.firstName }}</td>
           <td class="justify-center layout px-0">
-            <v-icon small class="mr-2" @click="authorDetails(props.item.id)">far fa-eye</v-icon>
             <v-icon small class="mr-2" @click="editItem(props.item)">fas fa-edit</v-icon>
             <v-icon small @click="deleteItem(props.item)">fas fa-trash</v-icon>
           </td>
@@ -112,7 +111,7 @@ export default {
     deleteItem(item) {
       const index = this.authors.indexOf(item);
       confirm("Are you sure you want to delete this item?") &&
-        this.authors.splice(index, 1);
+        this.$store.dispatch("deleteAuthor", this.editedItem);
     },
     close() {
       this.dialog = false;
@@ -124,13 +123,13 @@ export default {
     save() {
       if (this.editedIndex > -1) {
         Object.assign(this.authors[this.editedIndex], this.editedItem);
+        this.$store.dispatch("editAuthor", this.editedItem);
       } else {
+        this.$store.dispatch("addAuthor", this.editedItem);
+
         this.authors.push(this.editedItem);
       }
       this.close();
-    },
-    authorDetails(authorID) {
-      this.$router.push({ path: "/author/" + authorID });
     }
   }
 };

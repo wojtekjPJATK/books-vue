@@ -48,6 +48,17 @@ export default new Vuex.Store({
     },
     getBook(state, book) {
       state.book = book;
+    },
+    deleteBook(state, id) {
+      const index = state.books.findIndex(book => book.id == id);
+      state.books.splice(index, 1);
+    },
+    addBook(state, book) {
+      state.books.push(book);
+    },
+    editBook(state, item) {
+      const index = state.books.findIndex(book => book.id == item.id);
+      state.books.splice(index, 1, item);
     }
   },
   actions: {
@@ -118,6 +129,90 @@ export default new Vuex.Store({
       axios.get("/book/" + id).then(response => {
         context.commit("getBook", response.data.book);
       });
+    },
+    addBook(context, book) {
+      axios.defaults.headers.common["Authorization"] = context.state.id;
+      let image = book.image;
+      delete book.image;
+      delete book.cover;
+
+      axios
+        .post("book", book)
+        .then(response => {
+          let formData = new FormData();
+          formData.append("image", image);
+          return axios.post("/cover/" + response.data.book.id, formData, {
+            headers: {
+              "Content-Type": "multipart/form-data"
+            }
+          });
+        })
+        .then(response => {
+          context.commit("addBook", response.data.book);
+        })
+        .catch(err => {
+          console.log(err);
+        });
+    },
+    editBook(context, book) {
+      console.log(book);
+      axios.defaults.headers.common["Authorization"] = context.state.id;
+      let image = book.image;
+      delete book.image;
+      delete book.cover;
+
+      axios
+        .patch("/book/" + book.id, book)
+        .then(response => {
+          context.commit("editBook", response.data.book);
+          if (image) {
+            console.log(image);
+            let formData = new FormData();
+            formData.append("image", image);
+            return axios.post("/cover/" + response.data.book.id, formData, {
+              headers: {
+                "Content-Type": "multipart/form-data"
+              }
+            });
+          } else {
+            context.commit("editBook", response.data.book);
+            return false;
+          }
+        })
+        .then(response => {
+          if (!response) {
+            return;
+          }
+          context.commit("editBook", response.data.book);
+        })
+        .catch(err => {
+          console.log(err);
+        });
+    },
+    deleteBook(context, book) {
+      axios.defaults.headers.common["Authorization"] = context.state.id;
+
+      axios
+        .delete("/book/" + book.id)
+        .then(response => {
+          context.commit("deleteBook", book.id);
+        })
+        .catch(err => {
+          console.log(err);
+        });
+    },
+    addAuthor(context, author) {
+      axios.defaults.headers.common["Authorization"] = context.state.id;
+
+      axios
+        .post("/author", author)
+        .then(response => {
+          console.log(response);
+          context.commit("addAuthor", response.data.book);
+        })
+        .catch(err => {
+          console.log(err);
+        });
     }
   }
 });

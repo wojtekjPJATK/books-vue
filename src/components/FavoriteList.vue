@@ -5,6 +5,7 @@
         <td>{{ props.item.title }}</td>
         <td class="text-xs-left">{{ props.item.author.toString() }}</td>
         <td class="justify-center layout px-0">
+          <v-icon small class="mr-2" @click="bookDetails(props.item.id)">far fa-eye</v-icon>
           <v-icon v-if="props.item.favorited" small @click="removeFavorite(props.item)">fas fa-star</v-icon>
         </td>
       </template>
@@ -32,13 +33,16 @@ export default {
   }),
   computed: {
     favorites() {
+      this.$store.dispatch("getBooks");
       return this.$store.getters.getFavorites;
     }
   },
   methods: {
     removeFavorite(item) {
-      console.log(item);
       this.$store.dispatch("changeFavorite", item);
+    },
+    bookDetails(book) {
+      this.$router.push({ path: "/book/" + book });
     }
   }
 };
