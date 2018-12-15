@@ -1,9 +1,12 @@
 <template>
   <v-layout align-center column>
     <h1>{{ book.title }}</h1>
-    <h2>{{ book.authors[0].name }}</h2>
-    <img v-if="book.cover" :src="book.cover">
+    <h3>
+      <div v-for="author in book.author" :key="author">{{ author }}</div>
+    </h3>
+    <img v-if="book.imageUrl" :src="book.imageUrl">
     <img v-else src="/avatar.png">
+    <p>{{ book.description }}</p>
   </v-layout>
 </template>
 
@@ -16,19 +19,19 @@ export default {
     }
   },
   created() {
-    //get Book details
-    this.book = {
-      title: "First Snow",
-      authors: [
-        {
-          name: "Jo Nesbo",
-          id: 1
-        }
-      ],
-      genre: "criminal",
-      cover:
-        "https://ecsmedia.pl/c/harry-hole-tom-7-pierwszy-snieg-w-iext43178539.jpg"
-    };
+    this.$store.dispatch("getBookByID", this.book_id);
+  },
+  computed: {
+    book() {
+      return this.$store.getters.getBook;
+    }
   }
 };
 </script>
+
+<style scoped>
+img {
+  max-height: 400px;
+}
+</style>
+

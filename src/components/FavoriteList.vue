@@ -1,21 +1,12 @@
 <template>
   <div>
-    <v-data-table
-      :headers="headers"
-      :items="favorites"
-      class="elevation-1"
-    >
+    <v-data-table :headers="headers" :items="favorites" class="elevation-1">
       <template slot="items" slot-scope="props">
         <td>{{ props.item.title }}</td>
-        <td class="text-xs-left">{{ props.item.author }}</td>
-        <td class="text-xs-left">{{ props.item.genre }}</td>
+        <td class="text-xs-left">{{ props.item.author.toString() }}</td>
         <td class="justify-center layout px-0">
-            <v-icon v-if="props.item.favorited"
-            small
-            @click="removeFavorite(props.item)"
-            >
-            fas fa-star
-            </v-icon>
+          <v-icon small class="mr-2" @click="bookDetails(props.item.id)">far fa-eye</v-icon>
+          <v-icon v-if="props.item.favorited" small @click="removeFavorite(props.item)">fas fa-star</v-icon>
         </td>
       </template>
       <template slot="no-data">
@@ -37,30 +28,23 @@ export default {
         value: "title"
       },
       { text: "Author", value: "author" },
-      { text: "Genre", value: "genre" },
       { text: "Actions", value: "name", sortable: false }
-    ],
-    favorites: []
+    ]
   }),
-  computed: {},
-  watch: {},
+  computed: {
+    favorites() {
+      return this.$store.getters.getFavorites;
+    }
+  },
   created() {
-    this.initialize();
+    this.$store.dispatch("getBooks");
   },
   methods: {
-    initialize() {
-      this.favorites = [
-        {
-          title: "First Snow",
-          author: "Jo Nesbo",
-          genre: "Criminal",
-          favorited: true
-        }
-      ];
-    },
     removeFavorite(item) {
-      const index = this.favorites.indexOf(item);
-      this.favorites.splice(index, 1);
+      this.$store.dispatch("changeFavorite", item);
+    },
+    bookDetails(book) {
+      this.$router.push({ path: "/book/" + book });
     }
   }
 };

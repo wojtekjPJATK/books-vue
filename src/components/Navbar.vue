@@ -35,15 +35,14 @@ export default {
   },
   computed: {
     isAuthenticated() {
-      return this.auth;
-      // return this.$store.getters.isAuthenticated;
+      return this.$store.getters.loggedIn;
     }
   },
   methods: {
     logout() {
-      this.auth = !this.auth;
-      return;
-      // this.$store.dispatch("userSignOut");
+      this.$store.dispatch("logout").then(response => {
+        this.$router.push({ name: "signin" });
+      });
     }
   }
 };
