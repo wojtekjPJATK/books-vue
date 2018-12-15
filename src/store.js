@@ -24,6 +24,11 @@ export default new Vuex.Store({
     },
     getBook(state) {
       return state.book;
+    },
+    getFavorites(state) {
+      return state.books.filter(book => {
+        return book.favorited == true;
+      });
     }
   },
   mutations: {
