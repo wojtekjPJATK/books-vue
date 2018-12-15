@@ -65,10 +65,13 @@ export default new Vuex.Store({
         .then(response => {
           let books = response.data.books;
           let favorites = response.data.favBooks;
-          // books.forEach(book => {
-          //   if (book.id in favorites) book.favorited = true;
-          //   else book.favorited = false;
-          // });
+          if (!favorites) favorites = [];
+          books.forEach(book => {
+            if (favorites.indexOf(book.id.toString()) != -1)
+              book.favorited = true;
+            else book.favorited = false;
+          });
+          console.log(books);
           context.commit("getBooks", books);
         })
         .catch(err => {
