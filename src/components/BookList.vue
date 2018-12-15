@@ -124,10 +124,29 @@ export default {
       return this.editedIndex === -1 ? "New Book" : "Edit Book";
     },
     books() {
-      return this.$store.getters.getBooks;
+      let books = this.$store.getters.getBooks;
+      books.forEach(book => {
+        if (book.author.length > 1) {
+          let authors = "";
+          book.author.forEach(author => {
+            if (!authors) authors = author;
+            else authors += ", " + author;
+          });
+          book.author = authors;
+        } else {
+          book.author = book.author[0];
+        }
+      });
+      return books;
     },
     authors() {
-      return this.$store.getters.getAuthors;
+      const authors = this.$store.getters.getAuthors;
+      let authorNames = [];
+      authors.forEach(author => {
+        let name = author.firstName + " " + author.lastName;
+        authorNames.push(name);
+      });
+      return authorNames;
     }
   },
   watch: {

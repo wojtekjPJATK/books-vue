@@ -49,18 +49,10 @@ export default {
   methods: {
     submit() {
       if (this.$refs.form.validate()) {
-        this.$store
-          .dispatch("signin", {
-            username: this.username,
-            password: this.password
-          })
-          .then(response => {
-            console.log(response);
-            //this.$router.push({ path: "/" });
-          })
-          .catch(err => {
-            console.log(err);
-          });
+        this.$store.dispatch("signin", {
+          username: this.username,
+          password: this.password
+        });
       }
     },
     clear() {

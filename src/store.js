@@ -63,7 +63,6 @@ export default new Vuex.Store({
       axios
         .get("/book")
         .then(response => {
-          console.log(response);
           let books = response.data.books;
           let favorites = response.data.favBooks;
           // books.forEach(book => {
@@ -82,7 +81,6 @@ export default new Vuex.Store({
       axios
         .get("/author")
         .then(response => {
-          console.log(response);
           context.commit("getAuthors", response.data.authors);
         })
         .catch(err => {
