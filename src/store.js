@@ -9,7 +9,8 @@ export default new Vuex.Store({
   state: {
     id: localStorage.getItem("id") || null,
     books: [],
-    authors: []
+    authors: [],
+    book: null
   },
   getters: {
     loggedIn(state) {
@@ -21,7 +22,9 @@ export default new Vuex.Store({
     getAuthors(state) {
       return state.authors;
     },
-    getBookByID(state, id) {}
+    getBook(state) {
+      return state.book;
+    }
   },
   mutations: {
     getBooks(state, books) {
@@ -32,6 +35,14 @@ export default new Vuex.Store({
     },
     setSessionID(state, id) {
       state.id = id;
+    },
+    changeFavorite(state, item) {
+      const index = state.books.findIndex(book => book.id == item.id);
+      item.favorited = !item.favorited;
+      state.books.splice(index, 1, item);
+    },
+    getBook(state, book) {
+      state.book = book;
     }
   },
   actions: {
@@ -71,7 +82,6 @@ export default new Vuex.Store({
               book.favorited = true;
             else book.favorited = false;
           });
-          console.log(books);
           context.commit("getBooks", books);
         })
         .catch(err => {
@@ -89,6 +99,20 @@ export default new Vuex.Store({
         .catch(err => {
           console.log(err);
         });
+    },
+    changeFavorite(context, item) {
+      axios.defaults.headers.common["Authorization"] = context.state.id;
+
+      axios.post("/favorites/" + item.id).then(response => {
+        context.commit("changeFavorite", item);
+      });
+    },
+    getBookByID(context, id) {
+      axios.defaults.headers.common["Authorization"] = context.state.id;
+
+      axios.get("/book/" + id).then(response => {
+        context.commit("getBook", response.data.book);
+      });
     }
   }
 });

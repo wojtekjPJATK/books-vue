@@ -60,8 +60,7 @@
       <template slot="items" slot-scope="props" v-onclick="alert('click')">
         <tr>
           <td>{{ props.item.title }}</td>
-          <td class="text-xs-left">{{ props.item.author }}</td>
-          <td class="text-xs-left">{{ props.item.genre }}</td>
+          <td class="text-xs-left">{{ props.item.author.toString() }}</td>
           <td class="justify-center layout px-0">
             <v-icon small class="mr-2" @click="bookDetails(props.item.id)">far fa-eye</v-icon>
             <v-icon
@@ -101,22 +100,17 @@ export default {
         value: "title"
       },
       { text: "Author", value: "author" },
-      { text: "Genre", value: "genre" },
       { text: "Actions", value: "name", sortable: false }
     ],
-    //books: [],
-    //authors: [],
     selectedAuthors: [],
     editedIndex: -1,
     editedItem: {
       title: "",
-      author: "",
-      genre: ""
+      author: ""
     },
     defaultItem: {
       title: "",
-      author: "",
-      genre: ""
+      author: ""
     }
   }),
   computed: {
@@ -124,20 +118,7 @@ export default {
       return this.editedIndex === -1 ? "New Book" : "Edit Book";
     },
     books() {
-      let books = this.$store.getters.getBooks;
-      books.forEach(book => {
-        if (book.author.length > 1) {
-          let authors = "";
-          book.author.forEach(author => {
-            if (!authors) authors = author;
-            else authors += ", " + author;
-          });
-          book.author = authors;
-        } else {
-          book.author = book.author[0];
-        }
-      });
-      return books;
+      return this.$store.getters.getBooks;
     },
     authors() {
       const authors = this.$store.getters.getAuthors;
@@ -188,10 +169,10 @@ export default {
       this.close();
     },
     changeFavorite(item) {
-      item.favorited = !item.favorited;
+      this.$store.dispatch("changeFavorite", item);
     },
-    bookDetails(bookID) {
-      this.$router.push({ path: "/book/" + bookID });
+    bookDetails(book) {
+      this.$router.push({ path: "/book/" + book });
     },
     editCover() {
       this.$refs.fileInput.click();
