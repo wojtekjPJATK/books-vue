@@ -4,7 +4,8 @@
     <v-btn large @click="sendEmail()">Send email
       <v-icon right>fas fa-envelope</v-icon>
     </v-btn>
-    Aktualna temperatura w Gdańsku: {{ weather }}C
+    <p>Aktualna temperatura w Gdańsku: {{ weather }}C</p>
+    <p>{{ task }}</p>
   </v-layout>
 </template>
 
@@ -13,7 +14,8 @@ import axios from "axios";
 
 export default {
   data: () => ({
-    weather: false
+    weather: "0",
+    task: ""
   }),
   created() {
     this.getWeather();
@@ -23,6 +25,7 @@ export default {
       axios
         .get("https://solwit-pjatk-arc-2018-gr4.appspot.com/mail")
         .then(response => {
+          this.task = response.data;
           console.log(response);
         })
         .catch(e => {
