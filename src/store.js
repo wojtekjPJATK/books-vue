@@ -3,17 +3,7 @@ import Vuex from "vuex";
 import axios from "axios";
 
 Vue.use(Vuex);
-// Vue.use(VueAuthenticate, {
-//   baseURL: "https://solwit-pjatk-arc-2018-gr4.firebaseapp.com/",
 
-//   providers: {
-//     google: {
-//       clientId:
-//         "119036505724-l7aourh8dss0mvb0jp7bfr951l8sc8r4.apps.googleusercontent.com",
-//       redirectUrl: "https://solwit-pjatk-arc-2018-gr4.firebaseapp.com/auth"
-//     }
-//   }
-// });
 axios.defaults.baseURL = "https://2-dot-solwit-pjatk-arc-2018-gr4.appspot.com";
 
 export default new Vuex.Store({
