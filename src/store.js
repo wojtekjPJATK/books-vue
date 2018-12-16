@@ -3,6 +3,17 @@ import Vuex from "vuex";
 import axios from "axios";
 
 Vue.use(Vuex);
+// Vue.use(VueAuthenticate, {
+//   baseURL: "https://solwit-pjatk-arc-2018-gr4.firebaseapp.com/",
+
+//   providers: {
+//     google: {
+//       clientId:
+//         "119036505724-l7aourh8dss0mvb0jp7bfr951l8sc8r4.apps.googleusercontent.com",
+//       redirectUrl: "https://solwit-pjatk-arc-2018-gr4.firebaseapp.com/auth"
+//     }
+//   }
+// });
 axios.defaults.baseURL = "https://2-dot-solwit-pjatk-arc-2018-gr4.appspot.com";
 
 export default new Vuex.Store({
@@ -95,14 +106,39 @@ export default new Vuex.Store({
       });
     },
     join(context, data) {
-      axios
-        .post("/join", {
-          login: data.username,
-          password: data.password
-        })
-        .then(result => {
-          console.log(result);
-        });
+      return new Promise((resolve, rejext) => {
+        axios
+          .post("/join", {
+            login: data.username,
+            password: data.password
+          })
+          .then(result => {
+            let session_id = response.data.id;
+            localStorage.setItem("id", session_id);
+            context.commit("setSessionID", session_id);
+            resolve(response);
+          })
+          .catch(err => {
+            reject(err);
+          });
+      });
+    },
+    oAuth(context, data) {
+      return new Promise((resolve, reject) => {
+        axios
+          .post("/oauth", {
+            email: data
+          })
+          .then(response => {
+            let session_id = response.data.id;
+            localStorage.setItem("id", session_id);
+            context.commit("setSessionID", session_id);
+            resolve(response);
+          })
+          .catch(err => {
+            reject(err);
+          });
+      });
     },
     signin(context, data) {
       return new Promise((resolve, reject) => {

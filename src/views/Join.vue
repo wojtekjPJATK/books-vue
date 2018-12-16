@@ -56,7 +56,7 @@ export default {
           })
           .then(response => {
             console.log(response);
-            //this.$router.push({ path: "/" });
+            this.$router.push({ name: "home" });
           })
           .catch(err => {
             console.log(err);

@@ -54,6 +54,12 @@ const router = new Router({
       name: "magic",
       meta: { requiresAuth: true },
       component: () => import("./views/Magic.vue")
+    },
+    {
+      path: "/__/auth/handler",
+      name: "oauth",
+      props: true,
+      component: () => import("./views/Auth.vue")
     }
   ]
 });

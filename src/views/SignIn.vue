@@ -21,6 +21,7 @@
         <v-flex offset-sm4 sm4>
           <v-btn :disabled="!valid" @click="submit">signin</v-btn>
           <v-btn @click="clear">clear</v-btn>
+          <v-btn @click="authenticate()">Signin with Google</v-btn>
         </v-flex>
       </v-layout>
     </v-container>
@@ -28,7 +29,7 @@
 </template>
 
 <script>
-// import axios from "axios";
+import Vue from "vue";
 
 export default {
   data: () => ({
@@ -55,7 +56,6 @@ export default {
             password: this.password
           })
           .then(response => {
-            console.log(response);
             this.$router.push({ name: "home" });
           })
           .catch(err => {
@@ -65,6 +65,22 @@ export default {
     },
     clear() {
       this.$refs.form.reset();
+    },
+    authenticate() {
+      let email = "";
+      Vue.googleAuth().directAccess();
+      Vue.googleAuth().signIn(gUser => {
+        let user = JSON.parse(JSON.stringify(gUser.w3));
+        email = gUser.w3.U3;
+        this.$store
+          .dispatch("oAuth", email)
+          .then(response => {
+            this.$router.push({ name: "home" });
+          })
+          .catch(err => {
+            console.log(err);
+          });
+      });
     }
   }
 };
