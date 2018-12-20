@@ -39,11 +39,13 @@ export default {
     password: "",
     usernameRules: [
       v => !!v || "Username is required",
-      v => v.length >= 3 || "Minimum 3 characters"
+      v => v.length >= 3 || "Minimum 3 characters",
+      v => v == v.trim() || "Using forbiden characters"
     ],
     passwordRules: [
       v => !!v || "Password is required",
-      v => v.length >= 6 || "Minimum 6 characters"
+      v => v.length >= 6 || "Minimum 6 characters",
+      v => v == v.trim() || "Using forbiden characters"
     ]
   }),
 
