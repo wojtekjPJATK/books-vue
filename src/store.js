@@ -96,7 +96,7 @@ export default new Vuex.Store({
       });
     },
     join(context, data) {
-      return new Promise((resolve, rejext) => {
+      return new Promise((resolve, reject) => {
         axios
           .post("/join", {
             login: data.username,
