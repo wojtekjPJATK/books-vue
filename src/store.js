@@ -102,7 +102,7 @@ export default new Vuex.Store({
             login: data.username,
             password: data.password
           })
-          .then(result => {
+          .then(response => {
             let session_id = response.data.id;
             localStorage.setItem("id", session_id);
             context.commit("setSessionID", session_id);
