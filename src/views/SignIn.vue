@@ -72,6 +72,8 @@ export default {
     clear() {
       this.$refs.form.reset();
     },
+    // using vue-google-oauth library
+    // https://www.npmjs.com/package/vue-google-oauth
     authenticate() {
       let email = "";
       Vue.googleAuth().directAccess();

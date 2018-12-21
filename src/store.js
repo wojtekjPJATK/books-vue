@@ -100,7 +100,6 @@ export default new Vuex.Store({
             password: data.password
           })
           .then(response => {
-            if (response.data.msg) reject(response); // hotfix before backend changes are deployed
             let session_id = response.data.id;
             localStorage.setItem("id", session_id);
             context.commit("setSessionID", session_id);
@@ -296,6 +295,21 @@ export default new Vuex.Store({
         .catch(err => {
           console.log(err);
         });
+    },
+    isAdmin(context) {
+      axios.defaults.headers.common["Authorization"] = context.state.id;
+
+      return new Promise((resolve, reject) => {
+        axios
+          .get("/adminAccess")
+          .then(response => {
+            if (response.data.access == true) resolve(response);
+            else reject(response);
+          })
+          .catch(err => {
+            reject(err);
+          });
+      });
     }
   }
 });
