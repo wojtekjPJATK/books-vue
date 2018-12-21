@@ -78,31 +78,29 @@ export default new Vuex.Store({
   },
   actions: {
     logout(context) {
-      console.log("logging out");
       axios.defaults.headers.common["Authorization"] = context.state.id;
       return new Promise((resolve, reject) => {
         axios
           .delete("/session/" + this.state.id)
           .then(response => {
-            console.log(response);
             localStorage.removeItem("id");
             context.commit("deleteSession");
             resolve(response);
           })
           .catch(err => {
-            console.log(err);
             reject(err);
           });
       });
     },
     join(context, data) {
-      return new Promise((resolve, rejext) => {
+      return new Promise((resolve, reject) => {
         axios
           .post("/join", {
             login: data.username,
             password: data.password
           })
-          .then(result => {
+          .then(response => {
+            if (response.data.msg) reject(response); // hotfix before backend changes are deployed
             let session_id = response.data.id;
             localStorage.setItem("id", session_id);
             context.commit("setSessionID", session_id);
