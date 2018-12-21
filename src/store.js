@@ -100,7 +100,6 @@ export default new Vuex.Store({
             password: data.password
           })
           .then(response => {
-            if (response.data.msg) reject(response); // hotfix before backend changes are deployed
             let session_id = response.data.id;
             localStorage.setItem("id", session_id);
             context.commit("setSessionID", session_id);
