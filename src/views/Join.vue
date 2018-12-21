@@ -31,8 +31,6 @@
 </template>
 
 <script>
-// import axios from "axios";
-
 export default {
   data: () => ({
     valid: true,
@@ -61,7 +59,6 @@ export default {
             password: this.password
           })
           .then(response => {
-            console.log(response);
             this.$router.push({ name: "home" });
           })
           .catch(err => {

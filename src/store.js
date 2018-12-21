@@ -296,6 +296,21 @@ export default new Vuex.Store({
         .catch(err => {
           console.log(err);
         });
+    },
+    isAdmin(context) {
+      axios.defaults.headers.common["Authorization"] = context.state.id;
+
+      return new Promise((resolve, reject) => {
+        axios
+          .get("/adminAccess")
+          .then(response => {
+            if (response.data.access == true) resolve(response);
+            else reject(response);
+          })
+          .catch(err => {
+            reject(err);
+          });
+      });
     }
   }
 });

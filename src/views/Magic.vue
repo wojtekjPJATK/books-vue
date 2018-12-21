@@ -22,14 +22,21 @@ export default {
   },
   methods: {
     sendEmail() {
-      axios
-        .get("https://solwit-pjatk-arc-2018-gr4.appspot.com/mail")
+      this.$store
+        .dispatch("isAdmin")
         .then(response => {
-          this.task = response.data;
-          console.log(response);
+          axios
+            .get("https://solwit-pjatk-arc-2018-gr4.appspot.com/mail")
+            .then(response => {
+              this.task = response.data;
+            })
+            .catch(e => {
+              console.log(e);
+            });
         })
-        .catch(e => {
-          console.log(e);
+        .catch(err => {
+          this.task =
+            "Only admin can use this feature. Try to sign in as admin/admin1";
         });
     },
     getWeather() {
@@ -39,7 +46,6 @@ export default {
         )
         .then(response => {
           this.weather = response.data.main.temp - 273.15;
-          console.log(response.data);
         })
         .catch(e => {
           console.log(e);
