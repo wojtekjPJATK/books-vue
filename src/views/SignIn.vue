@@ -24,7 +24,7 @@
           <v-btn @click="authenticate()">Signin with Google</v-btn>
         </v-flex>
         <v-flex offset-sm4 sm4>
-          <p class="text-error">{{ error }}</p>
+          <p class="error--text">{{ error }}</p>
         </v-flex>
       </v-layout>
     </v-container>
