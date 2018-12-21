@@ -1,6 +1,7 @@
 <template>
   <div>
     <v-toolbar raised>
+      <p>{{ status }}</p>
       <v-spacer></v-spacer>
       <v-dialog v-model="dialog" max-width="800px">
         <v-btn slot="activator" color="grey" class="mb-2">New Book</v-btn>
@@ -90,6 +91,7 @@ export default {
     dialog: false,
     image: null,
     loading: true,
+    status: "",
     headers: [
       {
         text: "Title",
@@ -164,12 +166,24 @@ export default {
     },
     save() {
       this.editedItem.author = this.selectedAuthors;
+      if (this.selectedAuthors.length == 0) {
+        this.status = "Error: You need to pick author";
+        this.close();
+        return;
+      }
       this.editedItem.image = this.image;
       delete this.editedItem.imageUrl;
       if (this.editedIndex > -1) {
         this.$store.dispatch("editBook", this.editedItem);
       } else {
-        this.$store.dispatch("addBook", this.editedItem);
+        this.$store
+          .dispatch("addBook", this.editedItem)
+          .then(response => {
+            this.status = "Added " + response.data.book.title;
+          })
+          .catch(err => {
+            this.status = "Error - book already exists";
+          });
       }
       this.close();
     },
