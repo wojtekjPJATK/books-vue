@@ -197,23 +197,27 @@ export default new Vuex.Store({
       delete book.image;
       delete book.cover;
 
-      axios
-        .post("book", book)
-        .then(response => {
-          let formData = new FormData();
-          formData.append("image", image);
-          return axios.post("/cover/" + response.data.book.id, formData, {
-            headers: {
-              "Content-Type": "multipart/form-data"
-            }
+      return new Promise((resolve, reject) => {
+        axios
+          .post("book", book)
+          .then(response => {
+            if (!image) return response;
+            let formData = new FormData();
+            formData.append("image", image);
+            return axios.post("/cover/" + response.data.book.id, formData, {
+              headers: {
+                "Content-Type": "multipart/form-data"
+              }
+            });
+          })
+          .then(response => {
+            context.commit("addBook", response.data.book);
+            resolve(response);
+          })
+          .catch(err => {
+            reject(err);
           });
-        })
-        .then(response => {
-          context.commit("addBook", response.data.book);
-        })
-        .catch(err => {
-          console.log(err);
-        });
+      });
     },
     editBook(context, book) {
       axios.defaults.headers.common["Authorization"] = context.state.id;
