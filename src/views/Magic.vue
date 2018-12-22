@@ -78,7 +78,7 @@ export default {
             city: response.data.name,
             pressure: response.data.main.pressure,
             icon:
-              "http://openweathermap.org/img/w/" +
+              "https://openweathermap.org/img/w/" +
               response.data.weather[0].icon +
               ".png",
             description: response.data.weather[0].description,
