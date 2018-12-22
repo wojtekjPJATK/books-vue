@@ -4,8 +4,31 @@
     <v-btn large @click="sendEmail()">Send email
       <v-icon right>fas fa-envelope</v-icon>
     </v-btn>
-    <p>Aktualna temperatura w Gdańsku: {{ weather }}C</p>
-    <p>{{ task }}</p>
+    <v-flex v-if="weather" xs12 sm6>
+      <v-card color="gray lighten-1" width="300px">
+        <v-layout class="my-4">
+          <v-flex xs3>
+            <div class="mt-4">
+              <v-img :src="weather.icon" height="50px"></v-img>
+            </div>
+          </v-flex>
+          <v-flex xs7>
+            <v-card-title primary-title>
+              <div>
+                <div class="headline">{{ weather.city }}, {{ weather.temp}}°C</div>
+                <div>{{ weather.tempereture}}</div>
+                <div>{{ weather.description}}</div>
+                <div
+                  class="caption text-no-wrap"
+                >humidity: {{ weather.humidity }}%, pressure: {{ weather.pressure }}hPa</div>
+              </div>
+            </v-card-title>
+          </v-flex>
+        </v-layout>
+      </v-card>
+    </v-flex>
+    <span v-else>Something wrong with the weather API. Try to reload the page.</span>
+    <p class="red--text">{{ task }}</p>
   </v-layout>
 </template>
 
@@ -14,7 +37,7 @@ import axios from "axios";
 
 export default {
   data: () => ({
-    weather: "0",
+    weather: null,
     task: ""
   }),
   created() {
@@ -41,17 +64,32 @@ export default {
     },
     getWeather() {
       axios
-        .get(
-          "https://api.openweathermap.org/data/2.5/weather?id=7531002&APPID=366108217f1e830d2aa0c8a98c0ef25a&fbclid=IwAR122sOL5uHZ9p4dh025x_fKE9OF0t9IBZLCHpfZvsSLcVR-KMUr2QEAhW0"
-        )
+        .get("https://api.openweathermap.org/data/2.5/weather", {
+          params: {
+            id: "7531002",
+            APPID: "366108217f1e830d2aa0c8a98c0ef25a",
+            units: "metric",
+            lang: "pl"
+          }
+        })
         .then(response => {
-          this.weather = response.data.main.temp - 273.15;
+          this.weather = {
+            temp: response.data.main.temp,
+            city: response.data.name,
+            pressure: response.data.main.pressure,
+            icon:
+              "http://openweathermap.org/img/w/" +
+              response.data.weather[0].icon +
+              ".png",
+            description: response.data.weather[0].description,
+            humidity: response.data.main.humidity
+          };
         })
         .catch(e => {
+          this.weather = null;
           console.log(e);
         });
     }
   }
 };
 </script>
-
