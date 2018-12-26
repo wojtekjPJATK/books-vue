@@ -74,7 +74,6 @@ export default {
         sortable: false
       }
     ],
-    //authors: [],
     editedIndex: -1,
     editedItem: {
       lastName: "",
