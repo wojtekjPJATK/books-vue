@@ -5,27 +5,34 @@
       <v-icon right>fas fa-envelope</v-icon>
     </v-btn>
     <v-flex v-if="weather" xs12 sm6>
-      <v-card color="gray lighten-1" width="300px">
-        <v-layout class="my-4">
-          <v-flex xs3>
-            <div class="mt-4">
-              <v-img :src="weather.icon" height="50px"></v-img>
-            </div>
-          </v-flex>
-          <v-flex xs7>
-            <v-card-title primary-title>
-              <div>
-                <div class="headline">{{ weather.city }}, {{ weather.temp}}°C</div>
-                <div>{{ weather.tempereture}}</div>
-                <div>{{ weather.description}}</div>
-                <div
-                  class="caption text-no-wrap"
-                >humidity: {{ weather.humidity }}%, pressure: {{ weather.pressure }}hPa</div>
+      <v-hover>
+        <v-card
+          color="gray lighten-1"
+          width="300px"
+          slot-scope="{ hover }"
+          :class="`elevation-${hover ? 12 : 2}`"
+        >
+          <v-layout class="my-4">
+            <v-flex xs3>
+              <div class="mt-4">
+                <v-img :src="weather.icon" height="50px"></v-img>
               </div>
-            </v-card-title>
-          </v-flex>
-        </v-layout>
-      </v-card>
+            </v-flex>
+            <v-flex xs7>
+              <v-card-title primary-title>
+                <div>
+                  <div class="headline">{{ weather.city }}, {{ weather.temp}}°C</div>
+                  <div>{{ weather.tempereture}}</div>
+                  <div>{{ weather.description}}</div>
+                  <div
+                    class="caption text-no-wrap"
+                  >humidity: {{ weather.humidity }}%, pressure: {{ weather.pressure }}hPa</div>
+                </div>
+              </v-card-title>
+            </v-flex>
+          </v-layout>
+        </v-card>
+      </v-hover>
     </v-flex>
     <span v-else>Something wrong with the weather API. Try to reload the page.</span>
     <p class="red--text">{{ task }}</p>
