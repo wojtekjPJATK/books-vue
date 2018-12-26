@@ -1,6 +1,7 @@
 <template>
   <div>
     <v-toolbar raised>
+      <p>{{ status }}</p>
       <v-spacer></v-spacer>
       <v-dialog v-model="dialog" max-width="600px">
         <v-btn slot="activator" color="grey" class="mb-2">New Author</v-btn>
@@ -54,6 +55,7 @@ export default {
     dialog: false,
     loading: true,
     image: null,
+    status: "",
     headers: [
       {
         text: "Last Name",
@@ -72,7 +74,6 @@ export default {
         sortable: false
       }
     ],
-    //authors: [],
     editedIndex: -1,
     editedItem: {
       lastName: "",
@@ -122,10 +123,27 @@ export default {
       }, 300);
     },
     save() {
+      if (this.editedItem.firstName == "" || this.editedItem.lastName == "") {
+        this.status = "Error - Name missing";
+        this.close();
+        return;
+      }
       if (this.editedIndex > -1) {
         this.$store.dispatch("editAuthor", this.editedItem);
       } else {
-        this.$store.dispatch("addAuthor", this.editedItem);
+        this.$store
+          .dispatch("addAuthor", this.editedItem)
+          .then(response => {
+            this.status =
+              "Added " +
+              response.data.author.lastName +
+              " " +
+              response.data.author.firstName;
+            console.log(response);
+          })
+          .catch(err => {
+            this.status = "Error - Author already exists";
+          });
       }
       this.close();
     }

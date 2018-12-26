@@ -267,14 +267,17 @@ export default new Vuex.Store({
     addAuthor(context, author) {
       axios.defaults.headers.common["Authorization"] = context.state.id;
 
-      axios
-        .post("/author", author)
-        .then(response => {
-          context.commit("addAuthor", response.data.author);
-        })
-        .catch(err => {
-          console.log(err);
-        });
+      return new Promise((resolve, reject) => {
+        axios
+          .post("/author", author)
+          .then(response => {
+            context.commit("addAuthor", response.data.author);
+            resolve(response);
+          })
+          .catch(err => {
+            reject(err);
+          });
+      });
     },
     editAuthor(context, author) {
       axios.defaults.headers.common["Authorization"] = context.state.id;
